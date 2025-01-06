@@ -8,10 +8,11 @@ MOT17 | 74.7 | 65.6| 54.7 | 48.7 | 10.7 | 33906 | 104715 | 4320
 
 
 ## Validation set
-Training data | Training time | MOTA% | FP% | FN% | IDs% 
-:---:|:---:|:---:|:---:|:---:|:---:|:---
-[crowdhuman, mot17_half](track_exps/crowdhuman_mot_trainhalf.sh) |  ~45h + 1h  | 68.1 | 3.0  | 28.2 | 0.6 | 
-[crowdhuman, mot20 half](track_exps/crowdhuman_mot_trainhalf.sh)         |  ~45h       | 71.7 | 5.6 | 1.7 | 1.5 | 
+
+Dataset | Training time | MOTA% | HOTA% | FP% | FN% | IDs%  
+:---:|:---:|:---:|:---:|:---:|:---:|:---:
+crowdhuman, mot17_half |  ~45h + 1h  | 68.1 | 3.0  | 28.2 | 0.6 | 
+crowdhuman, mot20_half |  ~45h       | 71.7 | 5.6 | 1.7 | 1.5 | 
 
 
 #### Notes
@@ -139,6 +140,15 @@ sh track_exps/crowdhuman_plus_mot_train.sh
   author={Sun, Peize and Cao, Jinkun and Jiang, Yi and Zhang, Rufeng and Xie, Enze and Yuan, Zehuan and Wang, Changhu and Luo, Ping},
   journal={arXiv preprint arXiv:2012.15460},
   year={2020}
+}
+
+@misc{chen2023enhancing,
+      title={Enhancing Your Trained DETRs with Box Refinement}, 
+      author={Yiqun Chen and Qiang Chen and Peize Sun and Shoufa Chen and Jingdong Wang and Jian Cheng},
+      year={2023},
+      eprint={2307.11828},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
 }
 ```
 
