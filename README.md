@@ -1,273 +1,179 @@
-<div align="center">
-  <img src="./assets/logo_2.png" width="30%">
-</div>
-<h2 align="center">🦖detrex: Benchmarking Detection Transformers</h2>
-<p align="center">
-    <a href="https://github.com/IDEA-Research/detrex/releases">
-        <img alt="release" src="https://img.shields.io/github/v/release/IDEA-Research/detrex">
-    </a>
-    <a href="https://detrex.readthedocs.io/en/latest/index.html">
-        <img alt="docs" src="https://img.shields.io/badge/docs-latest-blue">
-    </a>
-    <a href='https://detrex.readthedocs.io/en/latest/?badge=latest'>
-    <img src='https://readthedocs.org/projects/detrex/badge/?version=latest' alt='Documentation Status' />
-    </a>
-    <a href="https://github.com/IDEA-Research/detrex/blob/main/LICENSE">
-        <img alt="GitHub" src="https://img.shields.io/github/license/IDEA-Research/detrex.svg?color=blue">
-    </a>
-    <a href="https://github.com/IDEA-Research/detrex/pulls">
-        <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-pink.svg">
-    </a>
-    <a href="https://github.com/IDEA-Research/detrex/issues">
-        <img alt="open issues" src="https://img.shields.io/github/issues/IDEA-Research/detrex">
-    </a>
-</p>
+## TransTrack: Multiple Object Tracking with Transformer
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<div align="center">
-
-<!-- <a href="https://arxiv.org/abs/2306.07265">📚Read detrex Benchmarking Paper</a> <sup><i><font size="3" color="#FF0000">New</font></i></sup> |
-<a href="https://rentainhe.github.io/projects/detrex/">🏠Project Page</a> <sup><i><font size="3" color="#FF0000">New</font></i></sup> |  [🏷️Cite detrex](#citation) -->
-
-[📚Read detrex Benchmarking Paper](https://arxiv.org/abs/2306.07265) | [🏠Project Page](https://rentainhe.github.io/projects/detrex/) | [🏷️Cite detrex](#citation) | [🚢DeepDataSpace](https://github.com/IDEA-Research/deepdataspace)
-
-</div>
-
-
-<div align="center">
-
-[📘Documentation](https://detrex.readthedocs.io/en/latest/index.html) |
-[🛠️Installation](https://detrex.readthedocs.io/en/latest/tutorials/Installation.html) |
-[👀Model Zoo](https://detrex.readthedocs.io/en/latest/tutorials/Model_Zoo.html) |
-[🚀Awesome DETR](https://github.com/IDEA-Research/awesome-detection-transformer) |
-[🆕News](#whats-new) |
-[🤔Reporting Issues](https://github.com/IDEA-Research/detrex/issues/new/choose)
-
-</div>
+![](transtrack.png)
 
 
 ## Introduction
+[TransTrack: Multiple Object Tracking with Transformer](https://arxiv.org/abs/2012.15460)
 
-detrex is an open-source toolbox that provides state-of-the-art Transformer-based detection algorithms. It is built on top of [Detectron2](https://github.com/facebookresearch/detectron2) and its module design is partially borrowed from [MMDetection](https://github.com/open-mmlab/mmdetection) and [DETR](https://github.com/facebookresearch/detr). Many thanks for their nicely organized code. The main branch works with **Pytorch 1.10+** or higher (we recommend **Pytorch 1.12**).
+## Updates
+- (22/02/2022) Multi-GPU testing is supported. 
+- (29/10/2021) Automatic Mixed Precision(AMP) training is supported. 
+- (28/04/2021) Higher performance is reported by training on mixture of CrowdHuman and MOT, instead of first CrowdHuman then MOT. 
+- (28/04/2021) Higher performance is reported by pre-training both detection and tracking on CrowdHuman, instead of only detection. 
+- (28/04/2021) Higher performance is reported by increasing the number of queries from 300 to 500. 
+- (08/04/2021) Refactoring the code.  
 
-<div align="center">
-  <img src="./assets/detr_arch.png" width="100%"/>
-</div>
+## MOT challenge
+Dataset | MOTA% | IDF1% | MOTP% | MT% | ML% |  FP | FN | IDS 
+:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
+MOT17 | 74.5 | 63.9| 80.6 | 46.8 | 11.3 | 28323 | 112137 | 3663
+MOT20 | 64.5 | 59.2 | 80.0 | 49.1 | 13.6 | 28566 | 151377 | 3565
 
-<details open>
-<summary> Major Features </summary>
+## Validation set
+Training data | Training time | MOTA% | FP% | FN% | IDs% | download
+:---:|:---:|:---:|:---:|:---:|:---:|:---
+[crowdhuman, mot17_half](track_exps/crowdhuman_mot_trainhalf.sh) |  ~45h + 1h  | 67.1 | 3.1  | 29.4 | 0.5 | [671mot17_crowdhuman_mot17.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing)
+[crowdhuman](track_exps/crowdhuman_train.sh)                   |  ~45h       | 56.0 | 11.2 | 32.3 | 0.4 | [560mot17_crowdhuman.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing) 
+[mot17_half](track_exps/mot_trainhalf.sh)                        |  9h        | 61.9 | 3.4  | 34.0   |0.7 |[619mot17_mot17.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing_)
 
-- **Modular Design.** detrex decomposes the Transformer-based detection framework into various components which help users easily build their own customized models.
+If download link is invalid, models and logs are also available in [Github Release](https://github.com/PeizeSun/TransTrack/releases/tag/v0.1) and [Baidu Drive](https://pan.baidu.com/s/1dcHuHUZ9y2s7LEmvtVHZZw) by code m4iv.
 
-- **Strong Baselines.** detrex provides a series of strong baselines for Transformer-based detection models. We have further boosted the model performance from **0.2 AP** to **1.1 AP** through optimizing hyper-parameters among most of the supported algorithms.
+#### Notes
+- We observe about 1 MOTA noise.
+- If the resulting MOTA of your self-trained model is not desired, playing around with the --track_thresh sometimes gives a better performance.
+- The default track_thresh is 0.4, except for 0.5 in crowdhuman.
+- The training time is on 8 NVIDIA V100 GPUs with batchsize 16.
+- We use the models pre-trained on imagenet.
+- (crowdhuman, mot17_half) is first training on crowdhuman, then fine-tuning on mot17_half.
 
-- **Easy to Use.** detrex is designed to be **light-weight** and easy for users to use:
-  - [LazyConfig System](https://detectron2.readthedocs.io/en/latest/tutorials/lazyconfigs.html) for more flexible syntax and cleaner config files.
-  - Light-weight [training engine](./tools/train_net.py) modified from detectron2 [lazyconfig_train_net.py](https://github.com/facebookresearch/detectron2/blob/main/tools/lazyconfig_train_net.py)
 
-Apart from detrex, we also released a repo [Awesome Detection Transformer](https://github.com/IDEA-Research/awesome-detection-transformer) to present papers about Transformer for detection and segmentation.
+## Demo
+<img src="assets/MOT17-11.gif" width="400"/>  <img src="assets/MOT17-04.gif" width="400"/>
 
-</details>
-
-## Fun Facts
-The repo name detrex has several interpretations:
-- <font color=blue> <b> detr-ex </b> </font>: We take our hats off to DETR and regard this repo as an extension of Transformer-based detection algorithms.
-
-- <font color=#db7093> <b> det-rex </b> </font>: rex literally means 'king' in Latin. We hope this repo can help advance the state of the art on object detection by providing the best Transformer-based detection algorithms from the research community.
-
-- <font color=#008000> <b> de-t.rex </b> </font>: de means 'the' in Dutch. T.rex, also called Tyrannosaurus Rex, means 'king of the tyrant lizards' and connects to our research work 'DINO', which is short for Dinosaur.
-
-## What's New
-v0.5.0 was released on 16/07/2023:
-- Support [Focus-DETR (ICCV'2023)](./projects/focus_detr/).
-- Support [SQR-DETR (CVPR'2023)](https://github.com/IDEA-Research/detrex/tree/main/projects/sqr_detr), credits to [Fangyi Chen](https://github.com/Fangyi-Chen)
-- Support [Align-DETR (ArXiv'2023)](./projects/align_detr/), credits to [Zhi Cai](https://github.com/FelixCaae)
-- Support [EVA-01 (CVPR'2023 Highlight)](https://github.com/baaivision/EVA/tree/master/EVA-01) and [EVA-02 (ArXiv'2023)](https://github.com/baaivision/EVA/tree/master/EVA-02) backbones, please check [DINO-EVA](./projects/dino_eva/) for more benchmarking results.
-
-Please see [changelog.md](./changlog.md) for details and release history.
 
 ## Installation
+The codebases are built on top of [Deformable DETR](https://github.com/fundamentalvision/Deformable-DETR) and [CenterTrack](https://github.com/xingyizhou/CenterTrack).
 
-Please refer to [Installation Instructions](https://detrex.readthedocs.io/en/latest/tutorials/Installation.html) for the details of installation.
+#### Requirements
+- Linux, CUDA>=9.2, GCC>=5.4
+- Python>=3.7
+- PyTorch ≥ 1.5 and [torchvision](https://github.com/pytorch/vision/) that matches the PyTorch installation.
+  You can install them together at [pytorch.org](https://pytorch.org) to make sure of this
+- OpenCV is optional and needed by demo and visualization
 
-## Getting Started
 
-Please refer to [Getting Started with detrex](https://detrex.readthedocs.io/en/latest/tutorials/Getting_Started.html) for the basic usage of detrex. We also provides other tutorials for:
-- [Learn about the config system of detrex](https://detrex.readthedocs.io/en/latest/tutorials/Config_System.html)
-- [How to convert the pretrained weights from original detr repo into detrex format](https://detrex.readthedocs.io/en/latest/tutorials/Converters.html)
-- [Visualize your training data and testing results on COCO dataset](https://detrex.readthedocs.io/en/latest/tutorials/Tools.html#visualization)
-- [Analyze the model under detrex](https://detrex.readthedocs.io/en/latest/tutorials/Tools.html#model-analysis)
-- [Download and initialize with the pretrained backbone weights](https://detrex.readthedocs.io/en/latest/tutorials/Using_Pretrained_Backbone.html)
-- [Frequently asked questions](https://github.com/IDEA-Research/detrex/issues/109)
-- [A simple onnx convert tutorial provided by powermano](https://github.com/IDEA-Research/detrex/issues/192)
-- Simple training techniques: [Model-EMA](https://github.com/IDEA-Research/detrex/pull/201), [Mixed Precision Training](https://github.com/IDEA-Research/detrex/pull/198), [Activation Checkpoint](https://github.com/IDEA-Research/detrex/pull/200)
-- [Simple tutorial about custom dataset training](https://github.com/IDEA-Research/detrex/pull/187)
+#### Steps
+1. Install and build libs
+```
+git clone https://github.com/PeizeSun/TransTrack.git
+cd TransTrack
+cd models/ops
+python setup.py build install
+cd ../..
+pip install -r requirements.txt
+```
 
-Although some of the tutorials are currently presented with relatively simple content, we will constantly improve our documentation to help users achieve a better user experience.
+2. Prepare datasets and annotations
+```
+mkdir crowdhuman
+cp -r /path_to_crowdhuman_dataset/CrowdHuman_train crowdhuman/CrowdHuman_train
+cp -r /path_to_crowdhuman_dataset/CrowdHuman_val crowdhuman/CrowdHuman_val
+mkdir mot
+cp -r /path_to_mot_dataset/train mot/train
+cp -r /path_to_mot_dataset/test mot/test
+```
+CrowdHuman dataset is available in [CrowdHuman](https://www.crowdhuman.org/). 
+```
+python3 track_tools/convert_crowdhuman_to_coco.py
+```
+MOT dataset is available in [MOT](https://motchallenge.net/).
+```
+python3 track_tools/convert_mot_to_coco.py
+```
 
-## Documentation
+3. Pre-train on crowdhuman
+```
+sh track_exps/crowdhuman_train.sh
+python3 track_tools/crowdhuman_model_to_mot.py
+```
+The pre-trained model is available [crowdhuman_final.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing).
 
-Please see [documentation](https://detrex.readthedocs.io/en/latest/index.html) for full API documentation and tutorials.
+4. Train TransTrack
+```
+sh track_exps/crowdhuman_mot_trainhalf.sh
+```
 
-## Model Zoo
-Results and models are available in [model zoo](https://detrex.readthedocs.io/en/latest/tutorials/Model_Zoo.html).
+5. Evaluate TransTrack
+```
+sh track_exps/mot_val.sh
+sh track_exps/mota.sh
+```
 
-<details open>
-<summary> Supported methods </summary>
+6. Visualize TransTrack
+```
+python3 track_tools/txt2video.py
+```
 
-- [x] [DETR (ECCV'2020)](./projects/detr/)
-- [x] [Deformable-DETR (ICLR'2021 Oral)](./projects/deformable_detr/)
-- [x] [PnP-DETR (ICCV'2021)](./projects/pnp_detr/)
-- [x] [Conditional-DETR (ICCV'2021)](./projects/conditional_detr/)
-- [x] [Anchor-DETR (AAAI 2022)](./projects/anchor_detr/)
-- [x] [DAB-DETR (ICLR'2022)](./projects/dab_detr/)
-- [x] [DAB-Deformable-DETR (ICLR'2022)](./projects/dab_deformable_detr/)
-- [x] [DN-DETR (CVPR'2022 Oral)](./projects/dn_detr/)
-- [x] [DN-Deformable-DETR (CVPR'2022 Oral)](./projects/dn_deformable_detr/)
-- [x] [Group-DETR (ICCV'2023)](./projects/group_detr/)
-- [x] [DETA (ArXiv'2022)](./projects/deta/)
-- [x] [DINO (ICLR'2023)](./projects/dino/)
-- [x] [H-Deformable-DETR (CVPR'2023)](./projects/h_deformable_detr/)
-- [x] [MaskDINO (CVPR'2023)](./projects/maskdino/)
-- [x] [CO-MOT (ArXiv'2023)](./projects/co_mot/)
-- [x] [SQR-DETR (CVPR'2023)](./projects/sqr_detr/)
-- [x] [Align-DETR (ArXiv'2023)](./projects/align_detr/)
-- [x] [EVA-01 (CVPR'2023 Highlight)](./projects/dino_eva/)
-- [x] [EVA-02 (ArXiv'2023)](./projects/dino_eva/)
-- [x] [Focus-DETR (ICCV'2023)](./projects/focus_detr/)
 
-Please see [projects](./projects/) for the details about projects that are built based on detrex.
+## Test set
+Pre-training data | Fine-tuning data | Training time | MOTA% | FP | FN | IDs
+:---:|:---:|:---:|:---:|:---:|:---:|:---:
+crowdhuman | mot17 | ~40h + 2h | 68.4 | 22137  | 152064  | 3942  
+crowdhuman | crowdhuman + mot17 | ~40h + 6h | 74.5 | 28323 | 112137 | 3663 
 
-</details>
+#### Notes
+- Performance on test set is evaluated by [MOT challenge](https://motchallenge.net/).
+- (crowdhuman + mot17) is training on mixture of crowdhuman and mot17.
+- We won't release trained models for test test. Running as in Steps could reproduce them. 
+ 
+#### Steps
+1. Train TransTrack
+```
+sh track_exps/crowdhuman_mot_train.sh
+```
+
+or
+
+1. Mix crowdhuman and mot17
+```
+mkdir -p mix20/annotations
+cp mot20/annotations/val_half.json mix20/annotations/val_half.json
+cp mot20/annotations/test.json mix20/annotations/test.json
+cd mix
+ln -s ../mot/train mot_train
+ln -s ../crowdhuman/CrowdHuman_train crowdhuman_train
+cd ..
+python3 track_tools/mix_data20.py
+```
+2. Train TransTrack
+```
+sh track_exps/crowdhuman_plus_mot_train.sh
+```
+
+# Inference
+python3 -m torch.distributed.launch --nproc_per_node=8 --use_env main_track.py  \
+--dataset_file mot \
+--coco_path mot \
+--batch_size 1 \
+--resume outputs/transtrack-hybrid-branch/r50_transtrack_for_test/checkpoint.pth \
+--eval \
+--with_box_refine \
+--num_queries_one2one 500 \
+--track_eval_split test \
+--dist_video \
+--output_dir outputs/transtrack-hybrid-branch/r50_transtrack_for_test \
+--track_thresh 0.3
 
 
 ## License
 
-This project is released under the [Apache 2.0 license](LICENSE).
+TransTrack is released under MIT License.
 
 
-## Acknowledgement
-- detrex is an open-source toolbox for Transformer-based detection algorithms created by researchers of **IDEACVR**. We appreciate all contributions to detrex!
-- detrex is built based on [Detectron2](https://github.com/facebookresearch/detectron2) and part of its module design is borrowed from [MMDetection](https://github.com/open-mmlab/mmdetection), [DETR](https://github.com/facebookresearch/detr), and [Deformable-DETR](https://github.com/fundamentalvision/Deformable-DETR).
+## Citing
 
-
-## Citation
-If you use this toolbox in your research or wish to refer to the baseline results published here, please use the following BibTeX entries:
-
-- Citing **detrex**:
+If you use TransTrack in your research or wish to refer to the baseline results published here, please use the following BibTeX entries:
 
 ```BibTeX
-@misc{ren2023detrex,
-      title={detrex: Benchmarking Detection Transformers}, 
-      author={Tianhe Ren and Shilong Liu and Feng Li and Hao Zhang and Ailing Zeng and Jie Yang and Xingyu Liao and Ding Jia and Hongyang Li and He Cao and Jianan Wang and Zhaoyang Zeng and Xianbiao Qi and Yuhui Yuan and Jianwei Yang and Lei Zhang},
-      year={2023},
-      eprint={2306.07265},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+
+@article{transtrack,
+  title   =  {TransTrack: Multiple-Object Tracking with Transformer},
+  author  =  {Peize Sun and Jinkun Cao and Yi Jiang and Rufeng Zhang and Enze Xie and Zehuan Yuan and Changhu Wang and Ping Luo},
+  journal =  {arXiv preprint arXiv: 2012.15460},
+  year    =  {2020}
 }
+
 ```
-
-<details>
-<summary> Citing Supported Algorithms </summary>
-
-```BibTex
-@inproceedings{carion2020end,
-  title={End-to-end object detection with transformers},
-  author={Carion, Nicolas and Massa, Francisco and Synnaeve, Gabriel and Usunier, Nicolas and Kirillov, Alexander and Zagoruyko, Sergey},
-  booktitle={European conference on computer vision},
-  pages={213--229},
-  year={2020},
-  organization={Springer}
-}
-
-@inproceedings{
-  zhu2021deformable,
-  title={Deformable {\{}DETR{\}}: Deformable Transformers for End-to-End Object Detection},
-  author={Xizhou Zhu and Weijie Su and Lewei Lu and Bin Li and Xiaogang Wang and Jifeng Dai},
-  booktitle={International Conference on Learning Representations},
-  year={2021},
-  url={https://openreview.net/forum?id=gZ9hCDWe6ke}
-}
-
-@inproceedings{meng2021-CondDETR,
-  title       = {Conditional DETR for Fast Training Convergence},
-  author      = {Meng, Depu and Chen, Xiaokang and Fan, Zejia and Zeng, Gang and Li, Houqiang and Yuan, Yuhui and Sun, Lei and Wang, Jingdong},
-  booktitle   = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
-  year        = {2021}
-}
-
-@inproceedings{
-  liu2022dabdetr,
-  title={{DAB}-{DETR}: Dynamic Anchor Boxes are Better Queries for {DETR}},
-  author={Shilong Liu and Feng Li and Hao Zhang and Xiao Yang and Xianbiao Qi and Hang Su and Jun Zhu and Lei Zhang},
-  booktitle={International Conference on Learning Representations},
-  year={2022},
-  url={https://openreview.net/forum?id=oMI9PjOb9Jl}
-}
-
-@inproceedings{li2022dn,
-  title={Dn-detr: Accelerate detr training by introducing query denoising},
-  author={Li, Feng and Zhang, Hao and Liu, Shilong and Guo, Jian and Ni, Lionel M and Zhang, Lei},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={13619--13627},
-  year={2022}
-}
-
-@inproceedings{
-  zhang2023dino,
-  title={{DINO}: {DETR} with Improved DeNoising Anchor Boxes for End-to-End Object Detection},
-  author={Hao Zhang and Feng Li and Shilong Liu and Lei Zhang and Hang Su and Jun Zhu and Lionel Ni and Heung-Yeung Shum},
-  booktitle={The Eleventh International Conference on Learning Representations },
-  year={2023},
-  url={https://openreview.net/forum?id=3mRwyG5one}
-}
-
-@InProceedings{Chen_2023_ICCV,
-  author    = {Chen, Qiang and Chen, Xiaokang and Wang, Jian and Zhang, Shan and Yao, Kun and Feng, Haocheng and Han, Junyu and Ding, Errui and Zeng, Gang and Wang, Jingdong},
-  title     = {Group DETR: Fast DETR Training with Group-Wise One-to-Many Assignment},
-  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
-  month     = {October},
-  year      = {2023},
-  pages     = {6633-6642}
-}
-
-@InProceedings{Jia_2023_CVPR,
-  author    = {Jia, Ding and Yuan, Yuhui and He, Haodi and Wu, Xiaopei and Yu, Haojun and Lin, Weihong and Sun, Lei and Zhang, Chao and Hu, Han},
-  title     = {DETRs With Hybrid Matching},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  month     = {June},
-  year      = {2023},
-  pages     = {19702-19712}
-}
-
-@InProceedings{Li_2023_CVPR,
-  author    = {Li, Feng and Zhang, Hao and Xu, Huaizhe and Liu, Shilong and Zhang, Lei and Ni, Lionel M. and Shum, Heung-Yeung},
-  title     = {Mask DINO: Towards a Unified Transformer-Based Framework for Object Detection and Segmentation},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  month     = {June},
-  year      = {2023},
-  pages     = {3041-3050}
-}
-
-@article{yan2023bridging,
-  title={Bridging the Gap Between End-to-end and Non-End-to-end Multi-Object Tracking},
-  author={Yan, Feng and Luo, Weixin and Zhong, Yujie and Gan, Yiyang and Ma, Lin},
-  journal={arXiv preprint arXiv:2305.12724},
-  year={2023}
-}
-
-@InProceedings{Chen_2023_CVPR,
-  author    = {Chen, Fangyi and Zhang, Han and Hu, Kai and Huang, Yu-Kai and Zhu, Chenchen and Savvides, Marios},
-  title     = {Enhanced Training of Query-Based Object Detection via Selective Query Recollection},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  month     = {June},
-  year      = {2023},
-  pages     = {23756-23765}
-}
-```
-
-
-</details>
-
-
-
