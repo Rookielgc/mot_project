@@ -1,41 +1,23 @@
-## TransTrack: Multiple Object Tracking with Transformer
+## APTT: Multiple Object Tracking with Accurate Position-Based Transformer
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-![](transtrack.png)
-
-
-## Introduction
-[TransTrack: Multiple Object Tracking with Transformer](https://arxiv.org/abs/2012.15460)
-
-## Updates
-- (22/02/2022) Multi-GPU testing is supported. 
-- (29/10/2021) Automatic Mixed Precision(AMP) training is supported. 
-- (28/04/2021) Higher performance is reported by training on mixture of CrowdHuman and MOT, instead of first CrowdHuman then MOT. 
-- (28/04/2021) Higher performance is reported by pre-training both detection and tracking on CrowdHuman, instead of only detection. 
-- (28/04/2021) Higher performance is reported by increasing the number of queries from 300 to 500. 
-- (08/04/2021) Refactoring the code.  
 
 ## MOT challenge
-Dataset | MOTA% | IDF1% | MOTP% | MT% | ML% |  FP | FN | IDS 
+Dataset | MOTA% | IDF1% | HOTA% | MT% | ML% |  FP | FN | IDS 
 :---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
-MOT17 | 74.5 | 63.9| 80.6 | 46.8 | 11.3 | 28323 | 112137 | 3663
-MOT20 | 64.5 | 59.2 | 80.0 | 49.1 | 13.6 | 28566 | 151377 | 3565
+MOT17 | 74.7 | 65.6| 54.7 | 48.7 | 10.7 | 33906 | 104715 | 4320
+
 
 ## Validation set
-Training data | Training time | MOTA% | FP% | FN% | IDs% | download
+Training data | Training time | MOTA% | FP% | FN% | IDs% 
 :---:|:---:|:---:|:---:|:---:|:---:|:---
-[crowdhuman, mot17_half](track_exps/crowdhuman_mot_trainhalf.sh) |  ~45h + 1h  | 67.1 | 3.1  | 29.4 | 0.5 | [671mot17_crowdhuman_mot17.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing)
-[crowdhuman](track_exps/crowdhuman_train.sh)                   |  ~45h       | 56.0 | 11.2 | 32.3 | 0.4 | [560mot17_crowdhuman.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing) 
-[mot17_half](track_exps/mot_trainhalf.sh)                        |  9h        | 61.9 | 3.4  | 34.0   |0.7 |[619mot17_mot17.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing_)
+[crowdhuman, mot17_half](track_exps/crowdhuman_mot_trainhalf.sh) |  ~45h + 1h  | 68.1 | 3.0  | 28.2 | 0.6 | 
+[crowdhuman, mot20 half](track_exps/crowdhuman_mot_trainhalf.sh)         |  ~45h       | 71.7 | 5.6 | 1.7 | 1.5 | 
 
-If download link is invalid, models and logs are also available in [Github Release](https://github.com/PeizeSun/TransTrack/releases/tag/v0.1) and [Baidu Drive](https://pan.baidu.com/s/1dcHuHUZ9y2s7LEmvtVHZZw) by code m4iv.
 
 #### Notes
 - We observe about 1 MOTA noise.
 - If the resulting MOTA of your self-trained model is not desired, playing around with the --track_thresh sometimes gives a better performance.
 - The default track_thresh is 0.4, except for 0.5 in crowdhuman.
-- The training time is on 8 NVIDIA V100 GPUs with batchsize 16.
 - We use the models pre-trained on imagenet.
 - (crowdhuman, mot17_half) is first training on crowdhuman, then fine-tuning on mot17_half.
 
@@ -45,10 +27,11 @@ If download link is invalid, models and logs are also available in [Github Relea
 
 
 ## Installation
-The codebases are built on top of [Deformable DETR](https://github.com/fundamentalvision/Deformable-DETR) and [CenterTrack](https://github.com/xingyizhou/CenterTrack).
+The codebases are built on top of [Deformable DETR](https://github.com/fundamentalvision/Deformable-DETR) and [CenterTrack](https://github.com/xingyizhou/CenterTrack) and [Enhancing Your Trained DETRs with Box Refinement](https://github.com/YiqunChen1999/RefineBox.).
 
 #### Requirements
 - Linux, CUDA>=9.2, GCC>=5.4
+- detrex, detectron2
 - Python>=3.7
 - PyTorch ≥ 1.5 and [torchvision](https://github.com/pytorch/vision/) that matches the PyTorch installation.
   You can install them together at [pytorch.org](https://pytorch.org) to make sure of this
@@ -58,8 +41,8 @@ The codebases are built on top of [Deformable DETR](https://github.com/fundament
 #### Steps
 1. Install and build libs
 ```
-git clone https://github.com/PeizeSun/TransTrack.git
-cd TransTrack
+git clone https://github.com/Rookielgc/APTT.git
+cd APTT
 cd models/ops
 python setup.py build install
 cd ../..
@@ -89,30 +72,29 @@ python3 track_tools/convert_mot_to_coco.py
 sh track_exps/crowdhuman_train.sh
 python3 track_tools/crowdhuman_model_to_mot.py
 ```
-The pre-trained model is available [crowdhuman_final.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing).
+The pre-trained model is available [crowdhuman_final.pth]([https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing](https://github.com/HDETR/H-TransTrack/releases/download/v1.0.1/crowdhuman_hybrid_branch.pth)).
 
-4. Train TransTrack
+4. Train APTT
 ```
 sh track_exps/crowdhuman_mot_trainhalf.sh
 ```
 
-5. Evaluate TransTrack
+5. Evaluate APTT
 ```
 sh track_exps/mot_val.sh
 sh track_exps/mota.sh
 ```
 
-6. Visualize TransTrack
+6. Visualize APTT
 ```
 python3 track_tools/txt2video.py
 ```
 
 
 ## Test set
-Pre-training data | Fine-tuning data | Training time | MOTA% | FP | FN | IDs
-:---:|:---:|:---:|:---:|:---:|:---:|:---:
-crowdhuman | mot17 | ~40h + 2h | 68.4 | 22137  | 152064  | 3942  
-crowdhuman | crowdhuman + mot17 | ~40h + 6h | 74.5 | 28323 | 112137 | 3663 
+Dataset | MOTA% | IDF1% | HOTA% | MT% | ML% |  FP | FN | IDS 
+:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
+MOT17 | 74.7 | 65.6| 54.7 | 48.7 | 10.7 | 33906 | 104715 | 4320
 
 #### Notes
 - Performance on test set is evaluated by [MOT challenge](https://motchallenge.net/).
@@ -120,7 +102,7 @@ crowdhuman | crowdhuman + mot17 | ~40h + 6h | 74.5 | 28323 | 112137 | 3663
 - We won't release trained models for test test. Running as in Steps could reproduce them. 
  
 #### Steps
-1. Train TransTrack
+1. Train APTT
 ```
 sh track_exps/crowdhuman_mot_train.sh
 ```
@@ -138,42 +120,25 @@ ln -s ../crowdhuman/CrowdHuman_train crowdhuman_train
 cd ..
 python3 track_tools/mix_data20.py
 ```
-2. Train TransTrack
+2. Train APTT
 ```
 sh track_exps/crowdhuman_plus_mot_train.sh
 ```
 
-# Inference
-python3 -m torch.distributed.launch --nproc_per_node=8 --use_env main_track.py  \
---dataset_file mot \
---coco_path mot \
---batch_size 1 \
---resume outputs/transtrack-hybrid-branch/r50_transtrack_for_test/checkpoint.pth \
---eval \
---with_box_refine \
---num_queries_one2one 500 \
---track_eval_split test \
---dist_video \
---output_dir outputs/transtrack-hybrid-branch/r50_transtrack_for_test \
---track_thresh 0.3
-
-
-## License
-
-TransTrack is released under MIT License.
-
-
-## Citing
-
-If you use TransTrack in your research or wish to refer to the baseline results published here, please use the following BibTeX entries:
-
-```BibTeX
-
-@article{transtrack,
-  title   =  {TransTrack: Multiple-Object Tracking with Transformer},
-  author  =  {Peize Sun and Jinkun Cao and Yi Jiang and Rufeng Zhang and Enze Xie and Zehuan Yuan and Changhu Wang and Ping Luo},
-  journal =  {arXiv preprint arXiv: 2012.15460},
-  year    =  {2020}
+## Citation
+```bibtex
+@article{jia2022detrs,
+  title={DETRs with Hybrid Matching},
+  author={Jia, Ding and Yuan, Yuhui and He, Haodi and Wu, Xiaopei and Yu, Haojun and Lin, Weihong and Sun, Lei and Zhang, Chao and Hu, Han},
+  journal={arXiv preprint arXiv:2207.13080},
+  year={2022}
 }
 
+@article{sun2020transtrack,
+  title={Transtrack: Multiple object tracking with transformer},
+  author={Sun, Peize and Cao, Jinkun and Jiang, Yi and Zhang, Rufeng and Xie, Enze and Yuan, Zehuan and Wang, Changhu and Luo, Ping},
+  journal={arXiv preprint arXiv:2012.15460},
+  year={2020}
+}
 ```
+
