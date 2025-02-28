@@ -1,4 +1,4 @@
-## APTT: Multiple Object Tracking with Accurate Position-Based Transformer
+## Hybrid Matching with Box-Aware Refinement: Enhancing TransTrack for Robust Multi-Pedestrian Tracking
 
 
 ## MOT challenge
@@ -42,8 +42,8 @@ The codebases are built on top of [Deformable DETR](https://github.com/fundament
 #### Steps
 1. Install and build libs
 ```
-git clone https://github.com/Rookielgc/APTT.git
-cd APTT
+git clone https://github.com/Rookielgc/mot_project.git
+cd mot_project
 cd models/ops
 python setup.py build install
 cd ../..
@@ -75,18 +75,18 @@ python3 track_tools/crowdhuman_model_to_mot.py
 ```
 The pre-trained model is available [crowdhuman_final.pth]([https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing](https://github.com/HDETR/H-TransTrack/releases/download/v1.0.1/crowdhuman_hybrid_branch.pth)).
 
-4. Train APTT
+4. Train HMBR-Trans
 ```
 sh track_exps/crowdhuman_mot_trainhalf.sh
 ```
 
-5. Evaluate APTT
+5. Evaluate HMBR-Trans
 ```
 sh track_exps/mot_val.sh
 sh track_exps/mota.sh
 ```
 
-6. Visualize APTT
+6. Visualize HMBR-Trans
 ```
 python3 track_tools/txt2video.py
 ```
@@ -103,7 +103,7 @@ MOT17 | 74.7 | 65.6| 54.7 | 48.7 | 10.7 | 33906 | 104715 | 4320
 - We won't release trained models for test test. Running as in Steps could reproduce them. 
  
 #### Steps
-1. Train APTT
+1. Train HMBR-Trans
 ```
 sh track_exps/crowdhuman_mot_train.sh
 ```
@@ -121,7 +121,7 @@ ln -s ../crowdhuman/CrowdHuman_train crowdhuman_train
 cd ..
 python3 track_tools/mix_data20.py
 ```
-2. Train APTT
+2. Train HMBR-Trans
 ```
 sh track_exps/crowdhuman_plus_mot_train.sh
 ```
